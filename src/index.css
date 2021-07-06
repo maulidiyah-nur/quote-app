@@ -1,0 +1,11 @@
+:root {
+  --space: 10px;
+  --button-color: #3898ec;
+}
+
+body {
+  margin: var(--space);
+  font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

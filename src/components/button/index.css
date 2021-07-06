@@ -1,0 +1,19 @@
+.button {
+    margin: var(--space) 0;
+    width: 100px;
+    padding: var(--space);
+    background-color: var(--button-color);
+    color: white;
+    border: solid 1px var(--button-color);
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.button:active {
+    opacity: 0.75;
+}
+
+.button:disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+}

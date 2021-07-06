@@ -1,0 +1,81 @@
+.quote-box {
+    margin: var(--space) 0;
+    display: flex;
+    flex-direction: row;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 1px 0 0 0 #888, 0 1px 0 0 #888, 1px 1px 0 0 #888, 1px 0 0 0 #888 inset, 0 1px 0 0 #888 inset;
+}
+
+.quote-box__panel {
+    display: flex;
+    flex-direction: column;
+}
+.quote-box__panel.quote-box__panel--left {
+    flex: 0.5;
+}
+.quote-box__panel.quote-box__panel--right {
+    flex: 1;
+}
+.quote-box__panel .quote-box__panel__header,
+.quote-box__panel .quote-box__panel__body {
+    box-shadow: 1px 0 0 0 #888, 0 1px 0 0 #888, 1px 1px 0 0 #888, 1px 0 0 0 #888 inset, 0 1px 0 0 #888 inset;
+    padding: var(--space);
+}
+.quote-box__panel.quote-box__panel--left .quote-box__panel__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.quote-box__panel.quote-box__panel--left .quote-box__panel__header img {
+    width: 50px;
+    height: 50px;
+}
+.quote-box__panel.quote-box__panel--left .quote-box__panel__header span {
+    margin-left: var(--space);
+    font-size: 14px;
+}
+.quote-box__panel.quote-box__panel--left .quote-box__panel__body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.quote-box__panel.quote-box__panel--left .quote-box__panel__body .quote-box__panel__body__est-day {
+    font-size: 20px;
+    font-weight: 700;
+    color: #4129c7;
+    margin-bottom: calc(2 * var(--space));
+}
+.quote-box__panel.quote-box__panel--left .quote-box__panel__body .quote-box__panel__body__est-label,
+.quote-box__panel.quote-box__panel--left .quote-box__panel__body .quote-box__panel__body__est-date {
+    font-size: 15px;
+}
+.quote-box__panel.quote-box__panel--left .quote-box__panel__body .quote-box__panel__body__est-date {
+    font-weight: 700;
+}
+.quote-box__panel.quote-box__panel--right .quote-box__panel__header,
+.quote-box__panel.quote-box__panel--right .quote-box__panel__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.quote-box__panel.quote-box__panel--right .quote-box__panel__header {
+    background-color: blue;
+    flex: 0.2;
+    color: white;
+    font-weight: 600;
+}
+.quote-box__panel.quote-box__panel--right .quote-box__panel__body {
+    flex: 0.8;
+    font-size: 40px;
+}
+
+@media (max-width: 576px) {
+    .quote-box {
+        flex-direction: column-reverse;
+    }
+    .quote-box__panel.quote-box__panel--left .quote-box__panel__header {
+        justify-content: center;
+    }
+}
