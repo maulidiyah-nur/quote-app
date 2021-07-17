@@ -44,7 +44,7 @@ const QuoteBox = (props: IQuoteBoxProps) => {
             </div>
             <div className='quote-box__panel quote-box__panel--right'>
                 <div className='quote-box__panel__header'>
-                    {`${data.starting_country} -> ${data.destination_country}`}
+                    {`${data.starting_country}${data.pickup_location ? ` (picked up at : ${data.pickup_location})` : ''} -> ${data.destination_country}`}
                 </div>
                 <div className='quote-box__panel__body'>
                     {`US${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(q.total_price)}`}
