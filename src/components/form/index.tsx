@@ -4,9 +4,11 @@ export interface IFormItemProps {
     name: string
     label: string
     type: 'text' | 'number' | 'select'
+    placeholder?: string
     options?: Array<string>
     onChange?: (value: string | number) => void
     error?: string
+    required?: boolean
 }
 
 export interface IFormProps {
@@ -18,16 +20,16 @@ const Form = (props: IFormProps) => {
     const { items } = props
 
     const renderInput = (item: IFormItemProps) => {
-        const { type, name, options, onChange } = item
+        const { type, name, placeholder, options, onChange } = item
         switch (type) {
             case 'select': 
-                return (<select name={name} onChange={(e) => onChange && onChange(e.target.value)}>
+                return (<select name={name} onChange={(e) => onChange && onChange(e.target.value)} placeholder={placeholder}>
                     {
                         [``, ...(options || [])].map((o) => <option key={o} value={o}>{o}</option>)
                     }
                 </select>)
             default: 
-                return (<input name={name} type={type} onChange={(e) => onChange && onChange(e.target.value)} min={0} />)
+                return (<input name={name} type={type} onChange={(e) => onChange && onChange(e.target.value)} min={0} placeholder={placeholder} />)
         }
     }
     return (

@@ -1,48 +1,58 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import IQuote from '../../interfaces/quote';
+import IQuote, { IBaseQuote, IQuoteRequest } from '../../interfaces/quote';
 import './index.css';
-import SHIPPING_CHANNELS from '../../data/shipping-channel.json'
-import { useEffect, useState } from 'react';
-import { GetDate, RandomInt } from '../../utils/general';
+import { GetDate } from '../../utils/general';
+import React from 'react';
 
 export interface IQuoteBoxProps {
-    quote: IQuote
+    quotes: Array<IQuote>
+    data: IQuoteRequest
 }
 
-const QuoteBox = (props: IQuoteBoxProps) => {
-    const { quote } = props
-    const [est, setEst] = useState<Array<number>>([0, 0])
-    const shippingChannel = SHIPPING_CHANNELS.find((sc) => sc.label === quote.shippingChannel)
+const SORT = ['total_price', 'min_days_delivery', 'max_days_delivery']
 
-    useEffect(() => {
-        const estStart = RandomInt(shippingChannel?.minStartRange || 0, shippingChannel?.maxStartRange || 0)
-        const estEnd = estStart + RandomInt(shippingChannel?.minEndRange || 0, shippingChannel?.maxEndRange || 0)
-        setEst([estStart, estEnd])
-    }, [quote])
+const QuoteBox = (props: IQuoteBoxProps) => {
+    const { quotes, data } = props
+    const [sort, setSort] = React.useState<string>(SORT[0])
+
+    const RenderEstimation = (q: IBaseQuote, label: string) => {
+        return (<div className='quote-box__panel__body'>
+            <div className='quote-box__panel__body__est-day'>{`${q.min_days_delivery}-${q.max_days_delivery} days`}</div>
+            <div className='quote-box__panel__body__est-label'>{label}</div>
+            <div className='quote-box__panel__body__est-date'>{`${GetDate(q.min_days_delivery)} - ${GetDate(q.max_days_delivery)}`}</div>
+        </div>)
+    }
     
-    return (
-        <div className='quote-box'>
+    return <>
+    <select value={sort} onChange={(e) => {
+        setSort(e.target.value)
+    }}>
+        {
+            SORT.map((s) => <option key={s} value={s}>{s}</option>)
+        }
+    </select>
+    {quotes.sort((a, b) => a[sort] - b[sort]).map((q) => (
+        <div key={q.total_price} className='quote-box'>
             <div className='quote-box__panel quote-box__panel--left'>
                 <div className='quote-box__panel__header'>
-                    <img src={`./${shippingChannel?.label.toLowerCase()}.png`} alt={shippingChannel?.label} />
-                    <span>{`Traditional ${shippingChannel?.label.toLowerCase()} freight`}</span>
+                    <img src={`/air.png`} alt='air freight' />
+                    <span>{`Air freight`}</span>
                 </div>
-                <div className='quote-box__panel__body'>
-                    <div className='quote-box__panel__body__est-day'>{`${est[0]}-${est[1]} days`}</div>
-                    <div className='quote-box__panel__body__est-label'>Estimated delivery</div>
-                    <div className='quote-box__panel__body__est-date'>{`${GetDate(est[0])} - ${GetDate(est[1])}`}</div>
-                </div>
+                {RenderEstimation(q.delivery_quote, 'Estimated Delivery')}
+                { q.pickup_quote && (RenderEstimation(q.pickup_quote, 'Estimated Pickup Delivery'))}
+                {RenderEstimation(q.delivery_quote, 'Estimated Total Delivery')}
             </div>
             <div className='quote-box__panel quote-box__panel--right'>
                 <div className='quote-box__panel__header'>
-                    {`${quote.startingCountry.toUpperCase()} -> ${quote.destinationCountry.toUpperCase()}`}
+                    {`${data.starting_country} -> ${data.destination_country}`}
                 </div>
                 <div className='quote-box__panel__body'>
-                    {`US${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(quote.price)}`}
+                    {`US${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(q.total_price)}`}
                 </div>
             </div>
         </div>
-    );
+    ))}
+    </>
 }
 
 export default QuoteBox;
