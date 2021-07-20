@@ -1,5 +1,6 @@
 import React from 'react';
 import ACTIONS from '../constants/action';
+import STORAGE from '../constants/storage';
 import IAPIResult from '../interfaces/api';
 import IContext from '../interfaces/context';
 import { IQuoteRequest } from '../interfaces/quote';
@@ -29,9 +30,10 @@ export const APP_PROVIDER = ({ children }: {children: any}) => {
       dispatch({
         type: ACTIONS.STARTING_COUNTRY_REQUESTING
       });
-      API.StartingCountries().then((response: Response) => {
+      API.StartingCountries().then((response: any) => {
         response.json().then((res: IAPIResult) => {
           if (res.status === 200) {
+            localStorage.setItem(STORAGE.STARTING_COUNTRY, JSON.stringify(res))
             dispatch({
               type: ACTIONS.STARTING_COUNTRY_SUCCESS,
               payload: {data: res.countries}
@@ -55,9 +57,13 @@ export const APP_PROVIDER = ({ children }: {children: any}) => {
       dispatch({
         type: ACTIONS.DESTINATION_COUNTRY_REQUESTING
       });
-      API.DestinationCountries(starting_country).then((response: Response) => {
+      API.DestinationCountries(starting_country).then((response: any) => {
         response.json().then((res: IAPIResult) => {
           if (res.status === 200) {
+            const current = localStorage.getItem(STORAGE.DESTINATION_COUNTRY)
+            let parsed = current ? JSON.parse(current) : {}
+            parsed[starting_country] = res
+            localStorage.setItem(STORAGE.DESTINATION_COUNTRY, JSON.stringify(parsed))
             dispatch({
               type: ACTIONS.DESTINATION_COUNTRY_SUCCESS,
               payload: {data: res.countries}
@@ -81,9 +87,13 @@ export const APP_PROVIDER = ({ children }: {children: any}) => {
       dispatch({
         type: ACTIONS.PICKUP_LOCATION_REQUESTING
       });
-      API.PickupLocations(starting_country).then((response: Response) => {
+      API.PickupLocations(starting_country).then((response: any) => {
         response.json().then((res: IAPIResult) => {
           if (res.cities) {
+            const current = localStorage.getItem(STORAGE.PICKUP_LOCATION)
+            let parsed = current ? JSON.parse(current) : {}
+            parsed[starting_country] = res
+            localStorage.setItem(STORAGE.PICKUP_LOCATION, JSON.stringify(parsed))
             dispatch({
               type: ACTIONS.PICKUP_LOCATION_SUCCESS,
               payload: {data: res.cities}
@@ -108,9 +118,13 @@ export const APP_PROVIDER = ({ children }: {children: any}) => {
         type: ACTIONS.QUOTE_REQUESTING,
         payload: { data }
       });
-      API.Quotes(data).then((response: Response) => {
+      API.Quotes(data).then((response: any) => {
         response.json().then((res: IAPIResult) => {
           if (res.status === 200) {
+            const current = localStorage.getItem(STORAGE.QUOTE)
+            let parsed = current ? JSON.parse(current) : {}
+            parsed[`${data.destination_country}|${data.starting_country}|${data.pickup_location}|${data.weight}`] = res
+            localStorage.setItem(STORAGE.QUOTE, JSON.stringify(parsed))
             dispatch({
               type: ACTIONS.QUOTE_SUCCESS,
               payload: {data: res.quotes}

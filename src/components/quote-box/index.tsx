@@ -3,6 +3,7 @@ import IQuote, { IBaseQuote, IQuoteRequest } from '../../interfaces/quote';
 import './index.css';
 import { GetDate } from '../../utils/general';
 import React from 'react';
+import Button from '../button';
 
 export interface IQuoteBoxProps {
     quotes: Array<IQuote>
@@ -31,6 +32,13 @@ const QuoteBox = (props: IQuoteBoxProps) => {
             SORT.map((s) => <option key={s} value={s}>{s}</option>)
         }
     </select>
+    <Button onClick={() => {
+        navigator.clipboard.writeText(window.location.href).then(function() {
+            console.log('Async: Copying to clipboard was successful!');
+        }, function(err) {
+            console.error('Async: Could not copy text: ', err);
+        });
+    }}>Copy URL</Button>
     {quotes.sort((a, b) => a[sort] - b[sort]).map((q) => (
         <div key={q.total_price} className='quote-box'>
             <div className='quote-box__panel quote-box__panel--left'>
